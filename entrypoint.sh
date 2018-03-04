@@ -18,8 +18,7 @@ case ${1} in
 		;;
 	start)
 		/usr/local/app/tars/tarsnode/util/start.sh
-		httpd
-		tail -f /var/log/yum.log
+		tail -f /dev/null
 		;;
 	*)
 		exec "$@"
