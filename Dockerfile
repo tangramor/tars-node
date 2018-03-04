@@ -13,8 +13,6 @@ ENV DBPort 3306
 ENV DBUser root
 ENV DBPassword password
 
-COPY php/ttars.c /root/
-
 ##安装
 RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
 	&& yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm \
