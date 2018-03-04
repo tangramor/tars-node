@@ -7,8 +7,9 @@ MachineName=$(cat /etc/hosts | grep ${MachineIp} | awk '{print $2}')
 install_node_services(){
 	echo "base services ...."
 	
+	#mkdir -p /data/tars/tarsnode_data && ln -s /data/tars/tarsnode_data /usr/local/app/tars/tarsnode/data
+
 	##核心基础服务配置修改
-	source /etc/profile
 	cd /usr/local/app/tars
 
 	sed -i "s/dbhost.*=.*192.168.2.131/dbhost = ${DBIP}/g" `grep dbhost -rl ./*`
@@ -24,13 +25,22 @@ install_node_services(){
 	echo "* * * * * /usr/local/app/tars/tarsnode/util/monitor.sh" >> /etc/crontab
 }
 
-setup_apache() {
+start_redis() {
+	sed -i "s/daemonize no/daemonize yes/g" /etc/redis.conf
+	redis-server /etc/redis.conf
+}
+
+start_apache() {
 	mkdir /data/web
 	echo "<?php phpinfo(); ?>" > /data/web/phpinfo.php
 	rm -rf /var/www/html
+	rm -f /etc/httpd/conf.d/welcome.conf
 	ln -s /data/web /var/www/html
+	httpd
 }
 
 install_node_services
 
-setup_apache
+start_redis
+
+start_apache
