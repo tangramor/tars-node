@@ -20,7 +20,12 @@ install_node_services(){
 
 	chmod u+x tarsnode_install.sh
 	./tarsnode_install.sh
-	
+
+	if [ ${MOUNT_DATA} = true ];
+	then
+		mkdir -p /data/tarsnode_data && ln -s /data/tarsnode_data /usr/local/app/tars/tarsnode/data
+	fi
+
 	echo "* * * * * /usr/local/app/tars/tarsnode/util/monitor.sh" >> /etc/crontab
 }
 
