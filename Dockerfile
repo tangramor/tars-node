@@ -4,6 +4,7 @@ WORKDIR /root/
 
 ##修改镜像时区 
 ENV TZ=Asia/Shanghai
+
 ENV DBIP 127.0.0.1
 ENV DBPort 3306
 ENV DBUser root
@@ -31,25 +32,26 @@ RUN install_packages build-essential cmake wget mariadb-client libmariadbclient-
 	&& echo "extension=phptars.so" > /etc/php/7.0/mods-available/phptars.ini \
 	&& ln -s /etc/php/7.0/mods-available/phptars.ini /etc/php/7.0/apache2/conf.d/20-phptars.ini \
 	&& ln -s /etc/php/7.0/mods-available/phptars.ini /etc/php/7.0/cli/conf.d/20-phptars.ini \
+	# 获取并安装JDK
 	&& mkdir -p /root/init && cd /root/init/ \
-	&& wget -c -t 0 --header "Cookie: oraclelicense=accept" --no-check-certificate http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz \
-	&& tar zxf /root/init/jdk-8u131-linux-x64.tar.gz && rm -rf /root/init/jdk-8u131-linux-x64.tar.gz \
-	&& mkdir /usr/java && mv /root/init/jdk1.8.0_131 /usr/java \
-	&& echo "export JAVA_HOME=/usr/java/jdk1.8.0_131" >> /etc/profile \
+	&& wget -c -t 0 --header "Cookie: oraclelicense=accept" -c --no-check-certificate http://download.oracle.com/otn-pub/java/jdk/10.0.1+10/fb4372174a714e6b8c52526dc134031e/jdk-10.0.1_linux-x64_bin.tar.gz \
+	&& tar zxf /root/init/jdk-10.0.1_linux-x64_bin.tar.gz && rm -rf /root/init/jdk-10.0.1_linux-x64_bin.tar.gz \
+	&& mkdir /usr/java && mv /root/init/jdk-10.0.1 /usr/java \
+	&& echo "export JAVA_HOME=/usr/java/jdk-10.0.1" >> /etc/profile \
 	&& echo "CLASSPATH=\$JAVA_HOME/lib/dt.jar:\$JAVA_HOME/lib/tools.jar" >> /etc/profile \
 	&& echo "PATH=\$JAVA_HOME/bin:\$PATH" >> /etc/profile \
 	&& echo "export PATH JAVA_HOME CLASSPATH" >> /etc/profile \
-	&& cd /usr/local/ && wget -c -t 0 http://mirrors.gigenet.com/apache/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz \
-	&& tar zxvf apache-maven-3.5.2-bin.tar.gz && echo "export MAVEN_HOME=/usr/local/apache-maven-3.5.2/" >> /etc/profile \
+	&& cd /usr/local/ && wget -c -t 0 http://mirrors.gigenet.com/apache/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz \
+	&& tar zxvf apache-maven-3.5.3-bin.tar.gz && echo "export MAVEN_HOME=/usr/local/apache-maven-3.5.3/" >> /etc/profile \
 	&& echo "export PATH=\$PATH:\$MAVEN_HOME/bin" >> /etc/profile && . /etc/profile && mvn -v \
-	&& rm -rf apache-maven-3.5.2-bin.tar.gz  \
+	&& rm -rf apache-maven-3.5.3-bin.tar.gz  \
 	&& . /etc/profile && cd /root/Tars/java && mvn clean install && mvn clean install -f core/client.pom.xml && mvn clean install -f core/server.pom.xml \
 	&& rm -rf /root/Tars \
 	&& apt-get -y autoremove
 
-ENV JAVA_HOME /usr/java/jdk1.8.0_131
+ENV JAVA_HOME /usr/java/jdk-10.0.1
 
-ENV MAVEN_HOME /usr/local/apache-maven-3.5.2
+ENV MAVEN_HOME /usr/local/apache-maven-3.5.3
 
 # 是否将Tars系统进程的data目录挂载到外部存储，缺省为false以支持windows下使用
 ENV MOUNT_DATA false
