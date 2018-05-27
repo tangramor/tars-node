@@ -4,10 +4,7 @@ WORKDIR /root/
 
 ##修改镜像时区 
 ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
-	&& localedef -c -f UTF-8 -i zh_CN zh_CN.utf8
 
-ENV LC_ALL zh_CN.utf8
 ENV DBIP 127.0.0.1
 ENV DBPort 3306
 ENV DBUser root
@@ -15,6 +12,8 @@ ENV DBPassword password
 
 ##安装
 RUN yum install -y git gcc gcc-c++ make wget cmake mysql mysql-devel unzip iproute which glibc-devel flex bison ncurses-devel zlib-devel kde-l10n-Chinese glibc-common \
+	&& ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
+	&& localedef -c -f UTF-8 -i zh_CN zh_CN.utf8 \
 	&& wget -c -t 0 https://github.com/Tencent/Tars/archive/master.zip -O master.zip \
 	&& unzip -a master.zip && mv Tars-master Tars && rm -f /root/master.zip \
 	&& mkdir -p /usr/local/mysql && ln -s /usr/lib64/mysql /usr/local/mysql/lib && ln -s /usr/include/mysql /usr/local/mysql/include && echo "/usr/local/mysql/lib/" >> /etc/ld.so.conf && ldconfig \
@@ -35,10 +34,10 @@ RUN yum install -y git gcc gcc-c++ make wget cmake mysql mysql-devel unzip iprou
 	&& echo "CLASSPATH=\$JAVA_HOME/lib/dt.jar:\$JAVA_HOME/lib/tools.jar" >> /etc/profile \
 	&& echo "PATH=\$JAVA_HOME/bin:\$PATH" >> /etc/profile \
 	&& echo "export PATH JAVA_HOME CLASSPATH" >> /etc/profile \
-	&& cd /usr/local/ && wget -c -t 0 http://mirrors.gigenet.com/apache/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz \
-	&& tar zxvf apache-maven-3.5.2-bin.tar.gz && echo "export MAVEN_HOME=/usr/local/apache-maven-3.5.2/" >> /etc/profile \
+	&& cd /usr/local/ && wget -c -t 0 http://mirrors.gigenet.com/apache/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz \
+	&& tar zxvf apache-maven-3.5.3-bin.tar.gz && echo "export MAVEN_HOME=/usr/local/apache-maven-3.5.3/" >> /etc/profile \
 	&& echo "export PATH=\$PATH:\$MAVEN_HOME/bin" >> /etc/profile && source /etc/profile && mvn -v \
-	&& rm -rf apache-maven-3.5.2-bin.tar.gz \
+	&& rm -rf apache-maven-3.5.3-bin.tar.gz \
 	&& source /etc/profile && cd /root/Tars/java && mvn clean install && mvn clean install -f core/client.pom.xml && mvn clean install -f core/server.pom.xml \
 	&& rm -rf /root/Tars \
 	&& yum -y remove git gcc gcc-c++ make cmake mysql-devel glibc-devel ncurses-devel zlib-devel glibc-headers kernel-headers keyutils-libs-devel krb5-devel libcom_err-devel libselinux-devel libsepol-devel libstdc++-devel libverto-devel openssl-devel pcre-devel autoconf automake \
@@ -46,7 +45,7 @@ RUN yum install -y git gcc gcc-c++ make wget cmake mysql mysql-devel unzip iprou
 
 ENV JAVA_HOME /usr/java/jdk1.8.0_131
 
-ENV MAVEN_HOME /usr/local/apache-maven-3.5.2
+ENV MAVEN_HOME /usr/local/apache-maven-3.5.3
 
 # 是否将Tars系统进程的data目录挂载到外部存储，缺省为false以支持windows下使用
 ENV MOUNT_DATA false
