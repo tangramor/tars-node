@@ -34,7 +34,7 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
 	&& mkdir -p /usr/local/app/patchs/tars.upload \
 	&& cd /tmp && curl -fsSL https://getcomposer.org/installer | php \
 	&& chmod +x composer.phar && mv composer.phar /usr/local/bin/composer \
-	&& cd /root/Tars/php/tarsclient/ext/ && phpize --clean && phpize \
+	&& cd /root/Tars/php/tars-extension/ && phpize --clean && phpize \
 	&& ./configure --enable-phptars --with-php-config=/usr/bin/php-config && make && make install && phpize --clean \
 	&& echo "extension=phptars.so" > /etc/php.d/phptars.ini \
 	# 安装PHP swoole模块
