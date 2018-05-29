@@ -18,7 +18,9 @@ case ${1} in
 		;;
 	start)
 		/usr/local/app/tars/tarsnode/util/start.sh
+		rm -f /var/run/redis_6379.pid
 		redis-server /etc/redis.conf
+		rm -rf /var/run/httpd/*
 		httpd
 		tail -f /var/log/yum.log
 		;;
