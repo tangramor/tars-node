@@ -83,6 +83,9 @@ ENV INET_NAME eth0
 # master节点IP或主机名（如果--link了maser节点），用于注册node到master
 ENV MASTER master
 
+# 中文字符集支持
+ENV LC_ALL "zh_CN.UTF-8"
+
 VOLUME ["/data"]
 
 ##拷贝资源
