@@ -104,7 +104,5 @@ VOLUME ["/data"]
 COPY install.sh /root/init/
 COPY entrypoint.sh /sbin/
 
-ADD confs /root/confs
-
 RUN chmod 755 /sbin/entrypoint.sh
 ENTRYPOINT [ "/sbin/entrypoint.sh", "start" ]
