@@ -22,29 +22,11 @@ install_node_services(){
 	then
 		mkdir -p /data/tarsnode_data && ln -s /data/tarsnode_data /usr/local/app/tars/tarsnode/data
 	fi
-
+	
 	chmod u+x tarsnode_install.sh
 	./tarsnode_install.sh
 	
 	echo "* * * * * /usr/local/app/tars/tarsnode/util/monitor.sh" >> /etc/crontab
 }
 
-start_redis() {
-	sed -i "s/daemonize no/daemonize yes/g" /etc/redis.conf
-	redis-server /etc/redis.conf
-}
-
-start_apache() {
-	mkdir /data/web
-	echo "<?php phpinfo(); ?>" > /data/web/phpinfo.php
-	rm -rf /var/www/html
-	rm -f /etc/httpd/conf.d/welcome.conf
-	ln -s /data/web /var/www/html
-	httpd
-}
-
 install_node_services
-
-start_redis
-
-start_apache
