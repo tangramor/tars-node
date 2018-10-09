@@ -3,8 +3,6 @@ FROM centos/systemd
 ##镜像时区 
 ENV TZ=Asia/Shanghai
 
-ENV GOPATH=/usr/local/go
-
 ENV DBIP 127.0.0.1
 ENV DBPort 3306
 ENV DBUser root
@@ -13,19 +11,10 @@ ENV DBPassword password
 # Mysql里tars用户的密码，缺省为tars2015
 ENV DBTarsPass tars2015
 
-ENV JAVA_HOME /usr/java/jdk-10.0.2
-
-ENV MAVEN_HOME /usr/local/apache-maven-3.5.4
-
 COPY --from=tarscloud/tars:dev /usr/local/app /usr/local/app
 COPY --from=tarscloud/tars:dev /usr/local/tars /usr/local/tars
 COPY --from=tarscloud/tars:dev /home/tarsproto /home/tarsproto
 COPY --from=tarscloud/tars:dev /usr/local/mysql/lib /usr/local/mysql/lib
-COPY --from=tarscloud/tars:dev $JAVA_HOME $JAVA_HOME
-COPY --from=tarscloud/tars:dev $MAVEN_HOME $MAVEN_HOME
-COPY --from=tarscloud/tars:dev /root/.m2 /root/.m2
-COPY --from=tarscloud/tars:dev /etc/profile /etc/profile
-COPY --from=tarscloud/tars:dev /root/.bashrc /root/.bashrc
 
 RUN yum -y install https://repo.mysql.com/yum/mysql-8.0-community/el/7/x86_64/mysql80-community-release-el7-1.noarch.rpm \
 	&& yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
@@ -34,7 +23,9 @@ RUN yum -y install https://repo.mysql.com/yum/mysql-8.0-community/el/7/x86_64/my
 	&& localedef -c -f UTF-8 -i zh_CN zh_CN.utf8 \
 	&& mkdir -p /usr/local/mysql && ln -s /usr/lib64/mysql /usr/local/mysql/lib && echo "/usr/local/mysql/lib/" >> /etc/ld.so.conf && ldconfig \
 	&& cd /usr/local/mysql/lib/ && rm -f libmysqlclient.a && ln -s libmysqlclient.so.*.*.* libmysqlclient.a \
-	&& cp $GOPATH/src/github.com/TarsCloud/TarsGo/tars/tools/tars2go/tars2go /usr/local/bin/ \
+	&& wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash \
+	&& source ~/.bashrc && nvm install v8.11.3 \
+	&& npm install -g @tars/stream @tars/rpc @tars/logs @tars/config @tars/monitor @tars/notify @tars/utils @tars/dyeing @tars/registry \
 	&& yum clean all && rm -rf /var/cache/yum
 
 
