@@ -3,8 +3,6 @@ FROM centos/systemd
 ##镜像时区 
 ENV TZ=Asia/Shanghai
 
-ENV GOPATH=/usr/local/go
-
 ENV DBIP 127.0.0.1
 ENV DBPort 3306
 ENV DBUser root
@@ -34,7 +32,6 @@ RUN yum -y install https://repo.mysql.com/yum/mysql-8.0-community/el/7/x86_64/my
 	&& localedef -c -f UTF-8 -i zh_CN zh_CN.utf8 \
 	&& mkdir -p /usr/local/mysql && ln -s /usr/lib64/mysql /usr/local/mysql/lib && echo "/usr/local/mysql/lib/" >> /etc/ld.so.conf && ldconfig \
 	&& cd /usr/local/mysql/lib/ && rm -f libmysqlclient.a && ln -s libmysqlclient.so.*.*.* libmysqlclient.a \
-	&& cp $GOPATH/src/github.com/TarsCloud/TarsGo/tars/tools/tars2go/tars2go /usr/local/bin/ \
 	&& yum clean all && rm -rf /var/cache/yum
 
 
