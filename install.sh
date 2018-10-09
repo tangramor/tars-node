@@ -29,15 +29,5 @@ install_node_services(){
 	echo "* * * * * /usr/local/app/tars/tarsnode/util/monitor.sh" >> /etc/crontab
 }
 
-set_go_src() {
-	echo "mount go src to data folder"
-
-	mkdir -p /data/go_src
-	cp -Rf $GOPATH/src/* /data/go_src/
-	rm -rf $GOPATH/src
-	ln -s /data/go_src $GOPATH/src
-}
-
 install_node_services
 
-set_go_src
